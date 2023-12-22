@@ -3,6 +3,7 @@ import json
 import requests
 from json import loads
 
+
 def read_csv(csv_file_path):
     with open(csv_file_path, 'r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -10,10 +11,7 @@ def read_csv(csv_file_path):
         row = (csv_reader, {})
         for line in csv_reader:
             print(line)
-        return(line)
-
-
-
+        return (line)
 
 
 def create_source(api_url, csv_file_path):
@@ -22,9 +20,6 @@ def create_source(api_url, csv_file_path):
     source_data = read_csv(csv_file_path)
     print("In Create Source 2")
     print(source_data)
-
-
-
 
     # Convert values to JSON payload
     payload = json.dumps({
@@ -58,10 +53,33 @@ def create_source(api_url, csv_file_path):
                     "useSSL": False
                 }
             ],
-            "deltaAggregationEnabled": False
-        }
-    }   )
+            "deltaAggregationEnabled": False,
+            "domainSettings": [
+                {
+                    "password": source_data.get("DomainPassword", ""),
+                    "servers": [
+                        source_data.get("DomainServer", "")
+                    ],
+                    "port": source_data.get("DomainPort", ""),
+                    "forestName": source_data.get("ForestName", ""),
+                    "authorizationType": "simple",
+                    "user": source_data.get("DomainUser", ""),
+                    "domainDN": source_data.get("DomainDN", ""),
+                    "useSSL": False
+                }
+            ],
+            "deleteThresholdPercentage": source_data.get("DeleteThreshold", ""),
+            "searchDNs": [
+                {
+                    "groupMembershipSearchDN": source_data.get("groupMembershipSearchDN", ""),
+                    "searchDN": source_data.get("searchDN", ""),
+                    "groupMemberFilterString": source_data.get("groupMemberFilterString", ""),
+                    "iterateSearchFilter": source_data.get("iterateSearchFilter", ""),
+                }
+            ],
 
+        }
+    })
 
     headers = {
         'Content-Type': 'application/json',
@@ -75,6 +93,8 @@ def create_source(api_url, csv_file_path):
     # Print the response
     print(response.status_code)
     print(response.text)
+    print(response.json)
+
 
 if __name__ == "__main__":
     # Replace 'input.csv' with your actual CSV file path
