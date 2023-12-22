@@ -3,9 +3,9 @@ import json
 import subprocess
 import gettoken as token
 import requests
-
 from json import loads
 
+#Function for reading the csv file
 def read_csv(csv_file_path):
     with open(csv_file_path, 'r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -18,7 +18,7 @@ def read_csv(csv_file_path):
 
 
 
-
+#Function for Creating the source
 def create_source(api_url, csv_file_path,token):
     # Read values from CSV
     print("In Create Source")
@@ -36,13 +36,13 @@ def create_source(api_url, csv_file_path,token):
         "description": source_data.get("description", "Test1234"),
         "owner": {
             "type": source_data.get("owner_type", "Identity"),
-            "id": source_data.get("owner_id", "5af30204f5eb4e04910ebcdd7ed4ca6d"),
-            "name": source_data.get("owner_name", "Rajeev Marwah")
+            "id": source_data.get("owner_id", ""),
+            "name": source_data.get("owner_name", "")
         },
         "cluster": {
             "type": source_data.get("Cluster_type", "Cluster"),
-            "id": source_data.get("Cluster_id", "185f7043f4034ed1be92c243ea79f368"),
-            "name": source_data.get("Cluster_name", "AWS")
+            "id": source_data.get("Cluster_id", ""),
+            "name": source_data.get("Cluster_name", "")
         },
 
 
@@ -92,7 +92,7 @@ def create_source(api_url, csv_file_path,token):
 
         }
     }   )
-
+   #Striping the token for newline character at the end
     tokenId=token.rstrip("\n")
     print(tokenId)
     headers = {
@@ -121,7 +121,7 @@ def create_source(api_url, csv_file_path,token):
     else:
         print("Error:", response.status_code, response.text)
 
-
+#Function for running the aggregation
 def aggregation(cloudExternalId,tokenId):
     headers = {
         'Content-Type': 'application/json',
@@ -139,15 +139,12 @@ def aggregation(cloudExternalId,tokenId):
 
     else:
         print("Error:", response.status_code, response.text)
-
+#Function for calling the python script to get the token
 def get_token():
     #print("In get token")
     try:
      completed_process=subprocess.run(['python','gettoken.py'],check=True,capture_output=True,text=True)
      if completed_process.returncode == 0:
-         #print("Execution successful.")
-         #print("Output:")
-         #print(completed_process.stdout)
          return(completed_process.stdout)
      else:
          print(f"Error: Failed to execute")
@@ -161,7 +158,7 @@ def get_token():
 
 
 
-
+#MAIN FUNCTION
 if __name__ == "__main__":
     # Replace 'input.csv' with your actual CSV file path
     csv_input_file = "/Users/rajeev.marwah/Documents/Customer Projects/ES Cases/Python script/Input.csv"
@@ -170,5 +167,5 @@ if __name__ == "__main__":
 
     token=get_token()
     print(token)
-
+    #Calling the Create source function
     create_source(api_url, csv_input_file,token)
