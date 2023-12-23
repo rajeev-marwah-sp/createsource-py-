@@ -114,6 +114,8 @@ def aggregation(cloudExternalId,tokenId):
         'Authorization': 'Bearer ' + tokenId
         }
     Id=cloudExternalId
+    #NOTE: This uses cc api as at the time of building the script, V3 API wasn't being released
+    #Needs to be replaced by V3 API
     api_url="https://company5780-poc.api.identitynow-demo.com/cc/api/source/loadAccounts/" + Id
     response = requests.post(api_url,headers=headers)
     if response.status_code == 200:
@@ -133,7 +135,7 @@ def get_token():
          print("Error output:")
          print(completed_process.stderr)
     except subprocess.CalledProcessError as e:
-        print("Unable to get the token from get_toekn.py: {e}")
+        print("Unable to get the token from get_token.py: {e}")
         return None
 #MAIN FUNCTION
 if __name__ == "__main__":
