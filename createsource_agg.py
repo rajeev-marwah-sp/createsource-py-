@@ -7,13 +7,13 @@ from json import loads
 
 #Function for reading the csv file
 def read_csv(csv_file_path):
+    print("Reading CSV file")
     with open(csv_file_path, 'r', encoding='utf-8-sig') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         # Assuming the CSV file has only one row of data
         row = (csv_reader, {})
         for line in csv_reader:
-            print(line)
-        return(line)
+         return(line)
 
 
 
@@ -23,15 +23,8 @@ def create_source(api_url, csv_file_path,token):
     # Read values from CSV
     print("In Create Source")
     source_data = read_csv(csv_file_path)
-    print("In Create Source 2")
-    print(source_data)
-
-
-
-
     # Convert values to JSON payload
     payload = json.dumps({
-
         "name": source_data.get("name", ""),
         "description": source_data.get("description", "Test1234"),
         "owner": {
@@ -44,7 +37,6 @@ def create_source(api_url, csv_file_path,token):
             "id": source_data.get("Cluster_id", ""),
             "name": source_data.get("Cluster_name", "")
         },
-
 
         "type": source_data.get("source_type", "Active Directory - Direct"),
         "connector": source_data.get("connector", "active-directory-angularsc"),
@@ -87,14 +79,10 @@ def create_source(api_url, csv_file_path,token):
                 "iterateSearchFilter": source_data.get("iterateSearchFilter", ""),
             }
             ],
-
-
-
         }
     }   )
    #Striping the token for newline character at the end
     tokenId=token.rstrip("\n")
-    print(tokenId)
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -103,14 +91,10 @@ def create_source(api_url, csv_file_path,token):
 
     # Make a request to the API
     response = requests.post(api_url, data=payload, headers=headers)
-
     # Print the response
-    print(response.status_code)
-    print(response.text)
     if response.status_code == 201:
         # Parse the JSON response
         json_response = response.json()
-
         # Access nested elements
         cloudExternalId = json_response.get('connectorAttributes', {}).get('cloudExternalId', '')
         sourceId=json_response.get('id','')
@@ -123,6 +107,7 @@ def create_source(api_url, csv_file_path,token):
 
 #Function for running the aggregation
 def aggregation(cloudExternalId,tokenId):
+    print("In Aggregation Block")
     headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -130,13 +115,10 @@ def aggregation(cloudExternalId,tokenId):
         }
     Id=cloudExternalId
     api_url="https://company5780-poc.api.identitynow-demo.com/cc/api/source/loadAccounts/" + Id
-    print(api_url)
     response = requests.post(api_url,headers=headers)
     if response.status_code == 200:
         # Parse the JSON response
-
         print("Aggregation Started")
-
     else:
         print("Error:", response.status_code, response.text)
 #Function for calling the python script to get the token
@@ -150,22 +132,15 @@ def get_token():
          print(f"Error: Failed to execute")
          print("Error output:")
          print(completed_process.stderr)
-
-
     except subprocess.CalledProcessError as e:
         print("Unable to get the token from get_toekn.py: {e}")
         return None
-
-
-
 #MAIN FUNCTION
 if __name__ == "__main__":
     # Replace 'input.csv' with your actual CSV file path
     csv_input_file = "/Users/rajeev.marwah/Documents/Customer Projects/ES Cases/Python script/Input.csv"
     # Replace the URL with your actual API endpoint
     api_url = "https://company5780-poc.api.identitynow-demo.com/v3/sources"
-
     token=get_token()
-    print(token)
     #Calling the Create source function
     create_source(api_url, csv_input_file,token)
