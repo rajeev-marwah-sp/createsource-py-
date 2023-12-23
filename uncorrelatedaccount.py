@@ -42,11 +42,11 @@ if __name__ == "__main__":
     token = get_token()
 
     # Replace 'input.csv' with your actual CSV file path
-    csv_file_path = "/Users/rajeev.marwah/Documents/Customer Projects/ES Cases/Python script/sourceoutput.csv"
+    csv_file_path = "<File path with File Name>"
     sourceId=read_csv(csv_file_path)
 
     srcId=sourceId.get("sourcename", "")
     # Replace the URL with your actual API endpoint
-    api_url = f'https://company5780-poc.api.identitynow-demo.com/v3/accounts?filters=uncorrelated%20eq%20true%20and%20sourceId%20eq%20\"{srcId}\"'
+    api_url = f'https://<tenant-url>/v3/accounts?filters=uncorrelated%20eq%20true%20and%20sourceId%20eq%20\"{srcId}\"'
     #Calling the uncorrelated function
     uncorrelatedaccounts(api_url,token)
