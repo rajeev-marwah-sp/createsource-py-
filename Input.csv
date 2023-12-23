@@ -1,0 +1,2 @@
+﻿name,description,owner_type,owner_id,owner_name,Cluster_type,Cluster_id,Cluster_name,source_type,connector,connector_class,ForestName,DomainPassword,DomainServer,DomainUser,DomainDN,DeleteThreshold,groupMembershipSearchDN,searchDN,groupMemberFilterString,iterateSearchFilter,email
+,,,,,,,,Active Directory - Direct,active-directory-angularsc,sailpoint.connector.ADLDAPConnector,,,,,,,,,,,
