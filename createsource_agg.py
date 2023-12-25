@@ -19,18 +19,19 @@ def read_csv(csv_file_path):
 
 
 #Function for Creating the source
-def create_source(api_url, csv_file_path,token):
+def create_source(api_url, csv_file_path,token,IdentityId):
     # Read values from CSV
     print("In Create Source")
     source_data = read_csv(csv_file_path)
+    IdentityId = IdentityId.rstrip("\n")
     # Convert values to JSON payload
     payload = json.dumps({
         "name": source_data.get("name", ""),
-        "description": source_data.get("description", "Test1234"),
+        "description": source_data.get("description", ""),
         "owner": {
             "type": source_data.get("owner_type", "Identity"),
-            "id": source_data.get("owner_id", ""),
-            "name": source_data.get("owner_name", "")
+            "id":  IdentityId
+
         },
         "cluster": {
             "type": source_data.get("Cluster_type", "Cluster"),
@@ -81,6 +82,8 @@ def create_source(api_url, csv_file_path,token):
             ],
         }
     }   )
+    
+
    #Striping the token for newline character at the end
     tokenId=token.rstrip("\n")
     headers = {
@@ -123,12 +126,28 @@ def aggregation(cloudExternalId,tokenId):
         print("Aggregation Started")
     else:
         print("Error:", response.status_code, response.text)
-#Function for calling the python script to get the token
+#Function for getting the Identity ID
+def get_Identity():
+    try:
+        print("Calling Get Identity Script")
+        completed_process = subprocess.run(['python', 'Listidentity.py'], check=True, capture_output=True, text=True)
+
+        if completed_process.returncode == 0:
+            return (completed_process.stdout)
+        else:
+            print(f"Error: Failed to execute")
+            print("Error output:")
+            print(completed_process.stderr)
+    except subprocess.CalledProcessError as e:
+        print("Unable to get the Identity ID from List Identity.py: {e}")
+        return None
+#Mathod to get the token
 def get_token():
-    #print("In get token")
+
     try:
      completed_process=subprocess.run(['python','gettoken.py'],check=True,capture_output=True,text=True)
      if completed_process.returncode == 0:
+         print("In get token")
          return(completed_process.stdout)
      else:
          print(f"Error: Failed to execute")
@@ -144,5 +163,8 @@ if __name__ == "__main__":
     # Replace the URL with your actual API endpoint
     api_url = "https://company5780-poc.api.identitynow-demo.com/v3/sources"
     token=get_token()
+    IdentityId=get_Identity()
+    print("Identity ID fetched")
+    print(IdentityId)
     #Calling the Create source function
-    create_source(api_url, csv_input_file,token)
+    create_source(api_url, csv_input_file,token,IdentityId)
