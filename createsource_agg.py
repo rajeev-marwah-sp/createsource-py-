@@ -119,7 +119,7 @@ def aggregation(cloudExternalId,tokenId):
     Id=cloudExternalId
     #NOTE: This uses cc api as at the time of building the script, V3 API wasn't being released
     #Needs to be replaced by V3 API
-    api_url="https://company5780-poc.api.identitynow-demo.com/cc/api/source/loadAccounts/" + Id
+    api_url="https://<tenant URL>.api.identitynow.com/cc/api/source/loadAccounts/" + Id
     response = requests.post(api_url,headers=headers)
     if response.status_code == 200:
         # Parse the JSON response
@@ -159,9 +159,9 @@ def get_token():
 #MAIN FUNCTION
 if __name__ == "__main__":
     # Replace 'input.csv' with your actual CSV file path
-    csv_input_file = "/Users/rajeev.marwah/Documents/Customer Projects/ES Cases/Python script/Input.csv"
+    csv_input_file = "<file Path>/Input.csv"
     # Replace the URL with your actual API endpoint
-    api_url = "https://company5780-poc.api.identitynow-demo.com/v3/sources"
+    api_url = "https://<tenant URL>.api.identitynow.com/v3/sources"
     token=get_token()
     IdentityId=get_Identity()
     print("Identity ID fetched")

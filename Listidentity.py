@@ -53,12 +53,12 @@ def get_token():
 if __name__ == "__main__":
     token=get_token()
     # Replace 'input.csv' with your actual CSV file path
-    csv_file_path = "/Users/rajeev.marwah/Documents/Customer Projects/ES Cases/Python script/Input.csv"
+    csv_file_path = "<Input File Path>/Input.csv"
     source_data=read_csv(csv_file_path)
     Email=source_data.get("email",'')
     EmailId=f"\"{Email}\""
     # Replace the URL with your actual API endpoint
-    api_url = 'https://company5780-poc.api.identitynow-demo.com/beta/identities?filters=email%20eq'+ EmailId
+    api_url = 'https://<tenant URL>.api.identitynow.com/beta/identities?filters=email%20eq'+ EmailId
     IdentityId=getIdentity(api_url,token)
     if IdentityId:
        print(IdentityId)

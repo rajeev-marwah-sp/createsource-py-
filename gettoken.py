@@ -33,7 +33,7 @@ def get_token(client_id,client_secret,token_url):
         return None
 
 if __name__ == "__main__":
-    config_file="/Users/rajeev.marwah/Documents/Customer Projects/ES Cases/Python script/config.ini"
+    config_file="<Input config file path here>/config.ini"
 
 
     try:
